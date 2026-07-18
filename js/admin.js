@@ -47,7 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="padding: 30px;"><i class="ph ph-spinner ph-spin"></i> กำลังโหลดข้อมูล...</td></tr>';
 
         try {
-            const response = await fetch(`${API_URL}?path=applicants`);
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ path: 'applicants' }),
+                headers: { 'Content-Type': 'text/plain' }
+            });
             const result = await response.json();
 
             if (result.status === 'success') {
