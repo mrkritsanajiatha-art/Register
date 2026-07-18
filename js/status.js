@@ -1,4 +1,4 @@
-const API_URL = 'https://script.google.com/macros/s/AKfycbyex1LIs8Pl2Y_JxqDvO538GNzWOoFHsA52qvnzYZh4KDRIjbAToEcjvDaVG0icME3e/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycby_J6xApoZivjG26hIae1QyNFVBFfAZ_SKzg-lvNn40TrgMK9ogQZgGzINY-9FtcQVE/exec';
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('searchForm');

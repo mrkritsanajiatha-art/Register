@@ -28,28 +28,32 @@ function doGet(e) {
 }
 
 function doPost(e) {
-  let body;
   try {
-    body = JSON.parse(e.postData.contents);
-  } catch(err) {
-    return response({status: 'error', message: 'Invalid JSON payload'}, 400);
+    let body;
+    try {
+      body = JSON.parse(e.postData.contents);
+    } catch(err) {
+      return response({status: 'error', message: 'Invalid JSON payload'}, 400);
+    }
+    
+    const path = body.path;
+    
+    if (path === 'register') {
+      return handleRegister(body.data);
+    } else if (path === 'uploadSlip') {
+      return handleUploadSlip(body.data);
+    } else if (path === 'approve') {
+      return handleApprove(body.data);
+    } else if (path === 'reject') {
+      return handleReject(body.data);
+    } else if (path === 'applicants') { // For Admin Dashboard
+      return handleGetApplicants();
+    }
+    
+    return response({status: 'error', message: 'Invalid path'}, 400);
+  } catch (error) {
+    return response({status: 'error', message: 'Server Error: ' + error.toString()});
   }
-  
-  const path = body.path;
-  
-  if (path === 'register') {
-    return handleRegister(body.data);
-  } else if (path === 'uploadSlip') {
-    return handleUploadSlip(body.data);
-  } else if (path === 'approve') {
-    return handleApprove(body.data);
-  } else if (path === 'reject') {
-    return handleReject(body.data);
-  } else if (path === 'applicants') { // For Admin Dashboard
-    return handleGetApplicants();
-  }
-  
-  return response({status: 'error', message: 'Invalid path'}, 400);
 }
 
 // Helpers
@@ -59,7 +63,17 @@ function response(data, code=200) {
 }
 
 function getSheet(sheetName) {
-  return SpreadsheetApp.openById(SHEET_ID).getSheetByName(sheetName);
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sheet = ss.getSheetByName(sheetName);
+  if (!sheet) {
+    sheet = ss.insertSheet(sheetName);
+    if (sheetName === 'Applicants') {
+      sheet.appendRow(['id', 'registerDate', 'firstName', 'lastName', 'email', 'phone', 'province', 'organization', 'position', 'package', 'courses', 'paymentStatus', 'slipUrl', 'adminRemark']);
+    } else if (sheetName === 'Logs') {
+      sheet.appendRow(['id', 'action', 'date', 'adminUser']);
+    }
+  }
+  return sheet;
 }
 
 function generateId() {
