@@ -47,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
             loginBtn.innerHTML = '<i class="ph ph-spinner ph-spin"></i>';
             
             setTimeout(() => {
-                if (emailInput.value === 'admin@test.com' && passwordInput.value === 'password') {
+                if (emailInput.value === 'admin' && passwordInput.value === '1234') {
                     // Set a mock token
                     localStorage.setItem('mockAdminToken', 'true');
                     window.location.href = 'admin.html';
                 } else {
-                    errorBox.textContent = 'Demo Mode: Use admin@test.com / password';
+                    errorBox.textContent = 'Demo Mode: Use admin / 1234';
                     errorBox.style.display = 'block';
                     loginBtn.disabled = false;
                     loginBtn.textContent = 'เข้าสู่ระบบ';
