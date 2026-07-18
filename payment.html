@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ชำระเงิน - สมาพันธ์แพลตฟอร์มการศึกษาและอาชีพแห่งประเทศไทย</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .payment-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+        .qr-placeholder {
+            width: 250px;
+            height: 250px;
+            background-color: var(--color-muted);
+            margin: 0 auto var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--color-border);
+            border-radius: var(--radius-sm);
+        }
+        .bank-details {
+            background: var(--color-primary-light);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--spacing-md);
+            text-align: left;
+        }
+        .file-upload-wrapper {
+            margin-top: var(--spacing-md);
+            text-align: left;
+        }
+        .file-upload-wrapper input[type="file"] {
+            display: block;
+            margin-top: 8px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo">
+                <i class="ph-fill ph-graduation-cap"></i>
+                <span>สมาพันธ์ฯ</span>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html" class="btn btn-outline">กลับหน้าหลัก</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="bg-muted" style="padding-bottom: 40px; min-height: 80vh;">
+        <div class="container">
+            <div class="payment-container">
+                <h1 class="section-title">ชำระเงิน</h1>
+                <p class="section-description">กรุณาชำระเงินและอัปโหลดหลักฐานการโอนเงิน (สลิป)</p>
+                
+                <div class="qr-placeholder">
+                    <div style="color: var(--color-ink-muted);">
+                        <i class="ph ph-qr-code" style="font-size: 4rem;"></i>
+                        <p>PromptPay QR Code</p>
+                    </div>
+                </div>
+
+                <div class="bank-details">
+                    <p><strong>พร้อมเพย์ (PromptPay):</strong> 012-345-6789</p>
+                    <p><strong>ชื่อบัญชี:</strong> สมาพันธ์แพลตฟอร์มการศึกษาและอาชีพแห่งประเทศไทย</p>
+                </div>
+
+                <form id="paymentForm">
+                    <div class="file-upload-wrapper">
+                        <label class="form-label" for="slipFile">อัปโหลดสลิปโอนเงิน (JPG, PNG, PDF)</label>
+                        <input type="file" id="slipFile" accept="image/jpeg, image/png, application/pdf" required>
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submitBtn">ยืนยันการชำระเงิน</button>
+                    </div>
+                    
+                    <div id="statusMessage" style="display:none; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/payment.js"></script>
+</body>
+</html>

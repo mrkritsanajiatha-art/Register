@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตรวจสอบสถานะ - สมาพันธ์แพลตฟอร์มการศึกษาและอาชีพแห่งประเทศไทย</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .status-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: var(--color-surface);
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: var(--spacing-md);
+        }
+        .search-box input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 1rem;
+        }
+        .result-box {
+            display: none;
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .status-pending { background-color: #FEF3C7; color: #D97706; }
+        .status-approved { background-color: #D1FAE5; color: #065F46; }
+        .status-rejected { background-color: #FEE2E2; color: #991B1B; }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo">
+                <i class="ph-fill ph-graduation-cap"></i>
+                <span>สมาพันธ์ฯ</span>
+            </a>
+            <div class="nav-actions">
+                <a href="index.html" class="btn btn-outline">กลับหน้าหลัก</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="bg-muted" style="padding-bottom: 40px; min-height: 80vh;">
+        <div class="container">
+            <div class="status-container">
+                <h1 class="section-title text-center">ตรวจสอบสถานะการสมัคร</h1>
+                <p class="section-description text-center" style="margin-bottom: 30px;">กรอกอีเมลที่คุณใช้ลงทะเบียนเพื่อตรวจสอบสถานะ</p>
+                
+                <form id="searchForm">
+                    <div class="search-box">
+                        <input type="email" id="searchEmail" placeholder="example@email.com" required>
+                        <button type="submit" class="btn btn-primary" id="searchBtn">ค้นหา</button>
+                    </div>
+                </form>
+                
+                <div id="errorMsg" style="display:none; color: #991B1B; text-align: center; margin-top: 10px;"></div>
+
+                <div class="result-box" id="resultBox">
+                    <h3 style="margin-bottom: 15px;">ผลการค้นหา</h3>
+                    <p><strong>ชื่อ-นามสกุล:</strong> <span id="resName">-</span></p>
+                    <p><strong>หลักสูตร:</strong> <span id="resCourses">-</span></p>
+                    <p style="margin-top: 15px;">
+                        <strong>สถานะ:</strong> <span id="resStatus" class="status-badge status-pending">กำลังตรวจสอบ</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/status.js"></script>
+</body>
+</html>

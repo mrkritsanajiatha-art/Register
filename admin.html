@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - สมาพันธ์แพลตฟอร์มการศึกษาและอาชีพแห่งประเทศไทย</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Firebase SDK (Version 9+ Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+
+    <style>
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background: var(--color-primary-dark);
+            color: white;
+            padding: var(--spacing-md);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar .brand {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: var(--spacing-lg);
+        }
+        .sidebar-menu {
+            list-style: none;
+            margin-bottom: auto;
+        }
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+        .sidebar-menu a {
+            color: #CBD5E1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        .content {
+            flex-grow: 1;
+            background: var(--color-muted);
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .stat-card {
+            background: var(--color-surface);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        .data-table-wrapper {
+            background: var(--color-surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        th {
+            background: #F8FAFC;
+            font-weight: 600;
+            color: var(--color-ink-muted);
+        }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-sm {
+            padding: 4px 8px;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="ph-fill ph-shield-check text-accent"></i>
+                <span>Admin Panel</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active"><i class="ph ph-users"></i> ผู้สมัครทั้งหมด</a></li>
+                <li><a href="#"><i class="ph ph-books"></i> จัดการหลักสูตร</a></li>
+                <li><a href="#"><i class="ph ph-gear"></i> ตั้งค่า</a></li>
+            </ul>
+            <a href="#" id="logoutBtn" style="color: #F87171; display: flex; align-items: center; gap: 10px; padding: 10px;"><i class="ph ph-sign-out"></i> ออกจากระบบ</a>
+        </aside>
+
+        <main class="content">
+            <div class="topbar">
+                <h2 style="margin:0;">Dashboard</h2>
+                <div id="adminUserDisplay" style="font-weight: 500;">Loading...</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="color: var(--color-ink-muted); font-size: 0.875rem;">ผู้สมัครทั้งหมด</div>
+                    <div class="stat-value" id="statTotal">-</div>
+                </div>
+                <div class="stat-card">
+                    <div style="color: var(--color-ink-muted); font-size: 0.875rem;">รอตรวจสอบ</div>
+                    <div class="stat-value" style="color: var(--color-accent-dark);" id="statPending">-</div>
+                </div>
+                <div class="stat-card">
+                    <div style="color: var(--color-ink-muted); font-size: 0.875rem;">อนุมัติแล้ว</div>
+                    <div class="stat-value" style="color: #059669;" id="statApproved">-</div>
+                </div>
+            </div>
+
+            <div class="data-table-wrapper">
+                <div style="padding: 16px; border-bottom: 1px solid var(--color-border); display: flex; justify-content: space-between;">
+                    <h3 style="margin:0;">รายชื่อล่าสุด</h3>
+                    <button class="btn btn-outline btn-sm" id="refreshBtn"><i class="ph ph-arrows-clockwise"></i> รีเฟรช</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>วันที่สมัคร</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>หลักสูตร</th>
+                            <th>สถานะ</th>
+                            <th>หลักฐาน</th>
+                            <th>จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="7" class="text-center" style="padding: 30px;">กำลังโหลดข้อมูล...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Need auth config -->
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
